@@ -1,0 +1,30 @@
+# This file is rendered via Terraform's templatefile() in
+# modules/karpenter/main.tf, which fills in the $${...} placeholders below.
+settings:
+  clusterName: ${cluster_name}
+  clusterEndpoint: ${cluster_endpoint}
+  interruptionQueue: ${interruption_queue_name}
+
+serviceAccount:
+  create: true
+  name: karpenter
+  annotations:
+    eks.amazonaws.com/role-arn: ${karpenter_controller_role_arn}
+
+controller:
+  resources:
+    requests:
+      cpu: 1
+      memory: 1Gi
+    limits:
+      cpu: 1
+      memory: 1Gi
+
+replicas: 2
+
+tolerations:
+  - key: CriticalAddonsOnly
+    operator: Exists
+
+nodeSelector:
+  role: system
